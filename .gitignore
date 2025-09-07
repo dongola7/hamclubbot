@@ -1,1 +1,5 @@
+# Ignore python virtual environments
 *-env
+
+# Ignore the dotenvironment config file
+config.env
