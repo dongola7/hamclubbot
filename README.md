@@ -5,8 +5,10 @@ A basic discord bot created using [discord.py](https://discordpy-reborn.readthed
 # Getting Started
 
 ```bash
-# Create and activate a python virtual environment
+# Install system dependencies (requires Homebrew from https://brew.sh)
+brew bundle
 
+# Create and activate a python virtual environment
 python3 -m venv local-env
 source local-env/bin/activate
 
