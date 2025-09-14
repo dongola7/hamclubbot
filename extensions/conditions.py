@@ -16,7 +16,7 @@ class Conditions(simplebot.SimpleCog):
     @discord.command(name="cond", description="Show current conditions from https://hamqsl.com")
     async def cond(self, ctx: discord.ApplicationContext):
         cache_entry = self.__cache.getUrl('https://www.hamqsl.com/solar101pic.php')
-        with io.BytesIO(cache_entry['content']) as content:
+        with io.BytesIO(cache_entry.content) as content:
             file = discord.File(fp = content, filename='conditions.jpg')
             embed = self._embed(
                 title = "Current Solar Conditions",
@@ -33,11 +33,13 @@ class Conditions(simplebot.SimpleCog):
 
         # If there is no extra data associated with the cache, then we need to
         # convert the SVG to a PNG and cache the PNG value
-        if 'extra' not in cache_entry:
-            png_bytes = cairosvg.svg2png(bytestring = cache_entry['content'])
-            self.__cache.cacheRelatedData(URL, png_bytes)
+        if not cache_entry.extra:
+            logger.debug("converting muf map from svg to png")
+            png_bytes = cairosvg.svg2png(bytestring = cache_entry.content)
+            cache_entry.extra = png_bytes
         else:
-            png_bytes = cache_entry['extra']
+            logger.debug("using cached png value of muf map")
+            png_bytes = cache_entry.extra
 
         with io.BytesIO(png_bytes) as content:
             file = discord.File(fp = content, filename = 'mufmap.png')
@@ -49,6 +51,6 @@ class Conditions(simplebot.SimpleCog):
 
             await ctx.respond(embed=embed, file=file)
 
-def setup(bot: discord.Bot):
+def setup(bot: simplebot.SimpleBot):
     logger.info("setting up extension")
     bot.add_cog(Conditions(bot))
