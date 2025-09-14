@@ -16,5 +16,5 @@ source local-env/bin/activate
 pip install -r requirements.txt
 
 # Generate the config file from 1Password
-op inject -i config.env.tmpl -o config.env
+op inject -i config.yaml.tmpl -o config.yaml
 ```
