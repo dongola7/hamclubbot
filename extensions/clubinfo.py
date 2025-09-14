@@ -55,6 +55,6 @@ class ClubInfo(simplebot.SimpleCog):
         
         return embed  
 
-def setup(bot: discord.Bot):
+def setup(bot: simplebot.SimpleBot):
     logger.info("setting up extension")
     bot.add_cog(ClubInfo(bot))
