@@ -1,4 +1,5 @@
 import discord
+import discord.ext.tasks
 import time
 import datetime
 import logging
@@ -6,6 +7,21 @@ import logging
 logger = logging.getLogger(__name__)
 
 class SimpleBot(discord.Bot):
+    class CommandStats:
+        def __init__(self, command: str):
+            self.__received = 0
+            self.__completed = 0
+            self.__command = command
+
+        def __str__(self) -> str:
+            return f"cmdstats command={self.__command} received={self.__received} completed={self.__completed}"
+
+        def incr_completed(self):
+            self.__completed += 1
+
+        def incr_received(self):
+            self.__received += 1
+
     """Implements a base class providing some commmon functionality for bots"""
     def __init__(self, config: dict | None = None, **kwargs):
         super().__init__(**kwargs)
@@ -14,17 +30,41 @@ class SimpleBot(discord.Bot):
         self.__start_time = time.time()
         self.__config = config if config else dict()
         self.owner_id = self.config.get('ownerId', None)
+
+        self.__command_stats = dict[str, SimpleBot.CommandStats]()
    
     async def on_ready(self):
+        self.log_command_stats.start()
         logger.info(f"Username: {self.user}")
         logger.info(f"Servers: {len(self.guilds)}")
         logger.info("bot ready...")
-    
+
+    async def on_application_command(self, ctx: discord.ApplicationContext):
+        self.__get_command_stats(str(ctx.command)).incr_received()
+
+    async def on_application_command_completion(self, ctx: discord.ApplicationContext):
+        self.__get_command_stats(str(ctx.command)).incr_completed()
+
+    @discord.ext.tasks.loop(minutes=5)
+    async def log_command_stats(self):
+        for stats in self.__command_stats.values():
+            logger.info(stats)
+
+    def __get_command_stats(self, command: str):
+        if command in self.__command_stats:
+            stats = self.__command_stats[command]
+        else:
+            stats = self.__command_stats[command] = SimpleBot.CommandStats(command)
+        return stats
+
+    async def on_unknown_application_command(self, interaction: discord.Interaction):
+        logger.error(f"received unknown application command: {interaction}")
+
     @property
     def config(self) -> dict:
         """Returns the configuration (from file) for the bot"""
         return self.__config
-    
+
     @property
     def uptime(self) -> float:
         """Returns uptime for the bot in seconds"""
