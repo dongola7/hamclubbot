@@ -1,9 +1,9 @@
 import discord
-import webcache
+import extensions.util.webcache as webcache
 import io
 import cairosvg
 import logging
-import simplebot
+import extensions.util.simplebot as simplebot
 
 logger = logging.getLogger(__name__)
 

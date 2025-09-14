@@ -1,6 +1,6 @@
 import discord
 import logging
-import simplebot
+import extensions.util.simplebot as simplebot
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,4 @@
-import simplebot
+import extensions.util.simplebot as simplebot
 import discord
 import datetime
 

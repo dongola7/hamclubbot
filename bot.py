@@ -1,7 +1,7 @@
 #!python3
 
 import os
-import simplebot
+import extensions.util.simplebot as simplebot
 import logging
 import yaml
 import discord
@@ -9,7 +9,7 @@ import discord
 # Create logger
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s %(levelname)-8s %(name)s : %(message)s")
-logger = logging.getLogger("simple-bot")
+logger = logging.getLogger("bot")
 
 # Load config file
 CONFIG_PATH = os.getenv("BOT_CONFIG", "./config.yaml")
