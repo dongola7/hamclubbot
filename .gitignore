@@ -4,5 +4,5 @@
 # Ignore python generated files
 __pycache__
 
-# Ignore the dotenvironment config file
-config.env
+# Ignore the config file
+config.json
