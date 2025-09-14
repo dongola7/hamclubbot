@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 
 class SimpleBot(discord.Bot):
     """Implements a base class providing some commmon functionality for bots"""
-    def __init__(self, config: dict | None = None):
-        super().__init__()
+    def __init__(self, config: dict | None = None, **kwargs):
+        super().__init__(**kwargs)
 
         # Record the time the bot started
         self.__start_time = time.time()
