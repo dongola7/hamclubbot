@@ -1,10 +1,10 @@
 import discord
 import logging
-import extensions.basecog
+import simplebot
 
 logger = logging.getLogger(__name__)
 
-class ClubInfo(extensions.basecog.Cog):
+class ClubInfo(simplebot.SimpleCog):
     """
     Implements commands providing club information
 
@@ -14,7 +14,7 @@ class ClubInfo(extensions.basecog.Cog):
     to be updated to add/remove information without modifying the code itself.
     """
 
-    def __init__(self, bot: discord.Bot):
+    def __init__(self, bot: simplebot.SimpleBot):
         super().__init__(bot, config_name='clubInfo')
 
         self.__subcommands = []

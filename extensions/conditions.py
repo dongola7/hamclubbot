@@ -3,13 +3,13 @@ import webcache
 import io
 import cairosvg
 import logging
-import extensions.basecog
+import simplebot
 
 logger = logging.getLogger(__name__)
 
-class Conditions(extensions.basecog.Cog):
+class Conditions(simplebot.SimpleCog):
     """Provides a set of discord bot commands for checking radio weather conditions"""
-    def __init__(self, bot: discord.Bot):
+    def __init__(self, bot: simplebot.SimpleBot):
         super().__init__(bot)
         self.__cache = webcache.WebCache()
 

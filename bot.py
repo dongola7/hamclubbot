@@ -1,10 +1,9 @@
 #!python3
 
 import os
-import discord
+import simplebot
 import logging
 import yaml
-import time
 
 # Create logger
 logging.basicConfig(level=logging.INFO,
@@ -26,13 +25,12 @@ except Exception as ex:
     raise SystemExit(1)
 
 # Create the bot instance
-bot = discord.Bot()
-bot.start_time = time.time()
-bot.config = config
+bot = simplebot.SimpleBot(config)
 
 # Load extensions
 bot.load_extension("extensions.conditions")
 bot.load_extension("extensions.clubinfo")
+bot.load_extension("extensions.health")
 
 @bot.event
 async def on_ready():
