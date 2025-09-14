@@ -13,6 +13,7 @@ class SimpleBot(discord.Bot):
         # Record the time the bot started
         self.__start_time = time.time()
         self.__config = config if config else dict()
+        self.owner_id = self.config.get('ownerId', None)
    
     async def on_ready(self):
         logger.info(f"Username: {self.user}")

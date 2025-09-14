@@ -30,7 +30,7 @@ bot = simplebot.SimpleBot(config)
 # Load extensions
 bot.load_extension("extensions.conditions")
 bot.load_extension("extensions.clubinfo")
-bot.load_extension("extensions.health")
+bot.load_extension("extensions.about")
 
 @bot.event
 async def on_ready():
