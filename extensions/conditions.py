@@ -2,6 +2,9 @@ import discord
 import webcache
 import io
 import cairosvg
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Conditions(discord.Cog):
     """Provides a set of discord bot commands for checking radio weather conditions"""
@@ -45,4 +48,5 @@ class Conditions(discord.Cog):
             await ctx.respond(embed=embed, file=file)
 
 def setup(bot: discord.Bot):
+    logger.info("setting up extension")
     bot.add_cog(Conditions())
