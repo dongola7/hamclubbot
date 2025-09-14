@@ -3,12 +3,14 @@ import webcache
 import io
 import cairosvg
 import logging
+import extensions.basecog
 
 logger = logging.getLogger(__name__)
 
-class Conditions(discord.Cog):
+class Conditions(extensions.basecog.Cog):
     """Provides a set of discord bot commands for checking radio weather conditions"""
-    def __init__(self):
+    def __init__(self, bot: discord.Bot):
+        super().__init__(bot)
         self.__cache = webcache.WebCache()
 
     @discord.command(name="cond", description="Show current conditions from https://hamqsl.com")
@@ -16,7 +18,7 @@ class Conditions(discord.Cog):
         cache_entry = self.__cache.getUrl('https://www.hamqsl.com/solar101pic.php')
         with io.BytesIO(cache_entry['content']) as content:
             file = discord.File(fp = content, filename='conditions.jpg')
-            embed = discord.Embed(
+            embed = self._embed(
                 title = "Current Solar Conditions",
                 description="Images from [hamqsl.com](https://www.hamqsl.com)"
             )
@@ -39,7 +41,7 @@ class Conditions(discord.Cog):
 
         with io.BytesIO(png_bytes) as content:
             file = discord.File(fp = content, filename = 'mufmap.png')
-            embed = discord.Embed(
+            embed = self._embed(
                 title = "Current MUF Map",
                 description="Map from [prop.kc2g.com](https://prop.kc2g.com)"
             )
@@ -49,4 +51,4 @@ class Conditions(discord.Cog):
 
 def setup(bot: discord.Bot):
     logger.info("setting up extension")
-    bot.add_cog(Conditions())
+    bot.add_cog(Conditions(bot))
