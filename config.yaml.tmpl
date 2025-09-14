@@ -1,0 +1,100 @@
+#
+# General Bot Configuration
+#
+
+# Token used by the bot to authenticate with discord. This should be kept secret!
+discordToken: op://Private/Discord - Simple Bot/token
+
+# Set up the embed style for the bot
+embeds:
+    # Optionally define the color to use on embeds. Should be a hexadecimal value.
+    color: 0x2ecc71
+    # Optionally specify the URL of a thumbnail image to use on embeds.
+    thumbnail: https://www.kingscountyradioclub.com/wp-content/uploads/2017/05/Logo-The-Largest-Amateur-Radio-Club-in-NYC_2.gif
+
+#
+# Configuration for the clubinfo extension. This extension provides an easy 
+# way to request basic information about the club.
+#
+# The configuration is a dictionary where each key is the name of a subcommand of
+# the /club slash command. Each subcommand may be defined in one of two ways:
+# 
+# 1) As a simple string - The string should be the path to a markdown formatted file
+#    containing the content to be displayed
+# 2) As a dictionary consisting of the following keys:
+#   a) title - The title to display
+#   b) descriptiont - The description to display (supports markdown)
+#   c) fields - A list of fields to display. These are sort of like subsections.
+#      Each field has a name, value (supports markdown), and an optional parameter
+#      'inline', which is a boolean indicating if the field may be displayed inline
+#      with other fields. The fields are displayed in the embed in the order in
+#      which they are defined.
+#
+clubInfo:
+    nets:
+        title: Club Nets
+        description: >-
+            The club hosts a series of regular nets. All nets are open to
+            members and non-members alike.
+        fields:
+            - name: 2 Meter Club Net
+              inline: false
+              value: >-
+                The net meets every Tuesday at 8PM EST on the clubs repeater.
+                [Click for more details](https://www.kingscountyradioclub.com/2-meter-club-net/).
+            - name: Tech Net
+              inline: false
+              value: >-
+                The Tech Net meets every second and fourth Wednesday of each
+                month at 9PM EST on the clubs repeater.
+            - name: 10 Meter Net
+              inline: false
+              value: >-
+                The club hosts a ten meter net every Saturday at 11:00 AM EST
+                on or around 28.380 MHz. [Click for more details](https://www.kingscountyradioclub.com/10-meter-net/)
+    meetings:
+        title: Club Meetings
+        description: >-
+            The club hosts a hybrid meeting monthly on the first Wednesday of
+            each month. The meeting starts informally at 7:00 PM EST with club
+            members gathering to chat, answer questions, and for general
+            technical discussions. The meeting formally starts at 8:00 PM EST
+            and typically lasts 1.5 to 2 hours.
+        fields:
+            - name: Location
+              inline: false
+              value: |-
+                Knights of Columbus
+                1511 10th Avenue
+                Brooklyn, NY 11215
+                (Park Slope/Windsor Terrace Neighborhood)
+                (Transportation: F or G Subway to 15th Street/Prospect Park Station BUS)
+            - name: More Details
+              inline: false
+              value: >-
+                See the [Club Website](https://www.kingscountyradioclub.com/club-meeting/)
+                for further details and to request a Zoom link should you wish
+                to participate remotely.
+    repeaters:
+        title: Club Repeaters
+        description: >-
+          The club hosts a repeater, located in Brooklyn, operating under
+          the KC2RC callsign.
+        fields:
+            - name: Transmit
+              value: 146.130 MHz
+            - name: Receive
+              value: 146.730 MHz
+            - name: PL Tone
+              value: 88.5 Hz
+            - name: EchoLink
+              value: >-
+                Operators not within range of the repeater may use
+                [EchoLink](https://echolink.org) by connecting to the KC2RC-R
+                callsign.
+              inline: false
+            - name: Live Stream
+              value: >-
+                The club provides a [live stream](https://www.kingscountyradioclub.com/stream/)
+                of the repeater 24x7.
+              inline: false

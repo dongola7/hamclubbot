@@ -1,10 +1,9 @@
 #!python3
 
-import dotenv
 import os
 import discord
 import logging
-import json
+import yaml
 import time
 
 # Create logger
@@ -13,11 +12,11 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger("simple-bot")
 
 # Load config file
-CONFIG_PATH = os.getenv("BOT_CONFIG", "./config.json")
+CONFIG_PATH = os.getenv("BOT_CONFIG", "./config.yaml")
 try:
     with open(CONFIG_PATH, "r") as config_stream:
         logger.info(f'Loading config from {CONFIG_PATH}')
-        config = json.load(config_stream)
+        config = yaml.safe_load(config_stream)
         logger.info("successfully loaded config")
 except FileNotFoundError:
     logger.error(f"Config file not found at {CONFIG_PATH}")

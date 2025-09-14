@@ -23,9 +23,7 @@ class Cog(discord.Cog):
     
     def _embed(self, title: str | None = None, description: str | None = None, footer: str | None = None) -> discord.Embed:
         """Creates and returns an embed with consistent formatting"""
-        color = discord.Color.blue()
-        if 'color' in self.__embed_config:
-            color = int(self.__embed_config['color'], 0)
+        color = self.__embed_config.get('color', discord.Color.blue())
         
         embed = discord.Embed(
             title=title, description=description,

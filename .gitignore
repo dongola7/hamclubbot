@@ -5,4 +5,4 @@
 __pycache__
 
 # Ignore the config file
-config.json
+config.yaml
