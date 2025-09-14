@@ -33,6 +33,7 @@ bot.config = config
 
 # Load extensions
 bot.load_extension("extensions.conditions")
+bot.load_extension("extensions.clubinfo")
 
 @bot.event
 async def on_ready():
