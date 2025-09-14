@@ -52,5 +52,4 @@ class Conditions(simplebot.SimpleCog):
             await ctx.respond(embed=embed, file=file)
 
 def setup(bot: simplebot.SimpleBot):
-    logger.info("setting up extension")
     bot.add_cog(Conditions(bot))
