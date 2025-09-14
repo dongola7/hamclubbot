@@ -30,11 +30,25 @@ class ClubInfo(extensions.basecog.Cog):
     def _generate_embed(self, info_type: str) -> discord.Embed:
         if info_type not in self.config:
             content = f"I don't have any information about club {info_type}. Ask my owner to add some!"
-        else:
+            return self._embed(description=content)
+        
+        # If the config is just a simple string, then it should point to a file
+        # on disk to read and return inline
+        if isinstance(self.config[info_type], str):
             with open(self.config[info_type], 'r') as fp:
-                content = fp.read()
+                return self._embed(description=fp.read())
+        
+        # The config is a dictionary of values
+        config = self.config[info_type]
+        embed = self._embed(
+            title=config.get('title', None),
+            description=config.get('description', None)
+        )
 
-        return self._embed(description=content)
+        for field in config.get('fields', None):
+            embed.add_field(name=field.get('name', None), value=field.get('value', None), inline=field.get('inline', True))
+        
+        return embed  
 
 def setup(bot: discord.Bot):
     logger.info("setting up extension")
