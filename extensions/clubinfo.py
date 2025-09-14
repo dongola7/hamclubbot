@@ -22,13 +22,11 @@ class ClubInfo(simplebot.SimpleCog):
             self.__subcommands.append(command)
     
     def get_subcommands(self, ctx: discord.AutocompleteContext):
-        return self.__subcommands
+        return [sub for sub in self.__subcommands if sub.startswith(ctx.value.lower())]
             
     @discord.command(name="club", description="Provides club information")
     @discord.option(name="what", description="What do you want to know about?", autocomplete=get_subcommands)
-    async def club(self, 
-                   ctx: discord.ApplicationContext, 
-                   what: str):
+    async def club(self,  ctx: discord.ApplicationContext, what: str):
         embed = self._generate_embed(what)
         await ctx.respond(embed=embed)
     
