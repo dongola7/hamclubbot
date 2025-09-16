@@ -1,6 +1,9 @@
 # Description
 
-A basic discord bot created using [discord.py](https://discordpy-reborn.readthedocs.io/)
+A discord bot intended for use in servers for Amateur Radio Clubs. Provides a series of
+useful tools for managing the club, looking up weather conditions for radio operation, etc.
+
+The bot is built using the [Pycord](https://pycord.dev) framework.
 
 # Getting Started
 
@@ -16,5 +19,8 @@ source local-env/bin/activate
 pip install -r requirements.txt
 
 # Generate the config file from 1Password
-op inject -i config.yaml.tmpl -o config.yaml
+op inject -i ./config/config.yaml.tmpl -o ./config/config.yaml
+
+# Run the bot
+./bot.py --config ./config/config.yaml
 ```
