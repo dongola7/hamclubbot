@@ -8,6 +8,26 @@ discordToken: op://Private/Discord - Simple Bot/token
 # Discord ID of the user owning this bot
 ownerId: op://Private/Discord - Simple Bot/ownerId
 
+#
+# Optionally specify the logging setup. The dictionary defined in the
+# logging element is modified to include version: 1 and incremental: False
+# and then passed directly to logging.config.dictConfig() before any
+# logger instances are created.
+#
+# logging:
+#   formatters:
+#     basic:
+#       format: "%(asctime)s %(levelname)-8s %(name)s : %(message)s"
+#   handlers:
+#     file:
+#       class : logging.FileHandler
+#       filename: logconfig.log
+#       formatter: basic
+#   root:
+#     level: INFO
+#     handlers:
+#       - file
+
 # Set up the embed style for the bot
 embeds:
   # Optionally define the color to use on embeds. Should be a hexadecimal value.
