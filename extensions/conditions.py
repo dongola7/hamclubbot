@@ -21,7 +21,7 @@ class Conditions(simplebot.SimpleCog):
 
     @discord.command(name="cond", description="Show current conditions from https://hamqsl.com")
     async def cond(self, ctx: discord.ApplicationContext):
-        cache_entry = self.__cache.getUrl('https://www.hamqsl.com/solar101pic.php')
+        cache_entry = await self.__cache.getUrl('https://www.hamqsl.com/solar101pic.php')
         with io.BytesIO(cache_entry.content) as content:
             file = discord.File(fp = content, filename='conditions.jpg')
             embed = self._embed(
@@ -35,7 +35,7 @@ class Conditions(simplebot.SimpleCog):
     @discord.command(name="muf", description="Show current MUF map from https://prop.kc2g.com")
     async def muf(self, ctx: discord.ApplicationContext):
         URL = 'https://prop.kc2g.com/renders/current/mufd-normal-now.svg'
-        cache_entry = self.__cache.getUrl(URL)
+        cache_entry = await self.__cache.getUrl(URL)
 
         # If there is no extra data associated with the cache, then we need to
         # convert the SVG to a PNG and cache the PNG value

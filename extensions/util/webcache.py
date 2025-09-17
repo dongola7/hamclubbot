@@ -4,10 +4,10 @@
 # See the file LICENSE for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-import datetime
 import requests
 import logging
 import time
+import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ class WebCache:
         self.__cache = dict[str, CacheEntry]()
         self.__CACHE_EXPIRY_TIME = cache_expiry_seconds
 
-    def getUrl(self, url: str) -> CacheEntry:
+    async def getUrl(self, url: str) -> CacheEntry:
         """
         Returns the cache entry for the given URL.
 
@@ -72,7 +72,7 @@ class WebCache:
         # Cache has either expired or URL is not in cache. Retrieve it
         # and add to cache            
         logger.debug(f"retrieving content for {url}")
-        resp = requests.get(url)
+        resp = await asyncio.get_event_loop().run_in_executor(None, requests.get, url)
         cache_entry = self.__cache[url] = CacheEntry(resp.content)
         
         return cache_entry
