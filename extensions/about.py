@@ -1,3 +1,9 @@
+# Copyright (c) 2025, Blair Kitchen
+# All rights reserved.
+#
+# See the file LICENSE for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+
 import extensions.util.simplebot as simplebot
 import discord
 import datetime
