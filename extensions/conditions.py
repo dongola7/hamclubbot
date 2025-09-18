@@ -5,6 +5,7 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
 import discord
+from typing import cast
 import extensions.util.webcache as webcache
 import io
 import cairosvg
@@ -47,7 +48,7 @@ class Conditions(simplebot.SimpleCog):
             logger.debug("using cached png value of muf map")
             png_bytes = cache_entry.extra
 
-        with io.BytesIO(png_bytes) as content:
+        with io.BytesIO(cast(bytes, png_bytes)) as content:
             file = discord.File(fp = content, filename = 'mufmap.png')
             embed = self._embed(
                 title = "Current MUF Map",
