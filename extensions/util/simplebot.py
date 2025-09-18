@@ -104,8 +104,7 @@ class SimpleCog(discord.Cog):
         
         embed = discord.Embed(
             title=title, description=description,
-            color=color,
-            thumbnail = self.__embed_config.get('thumbnail', None)
+            color=color
         )
         
         if footer:
