@@ -41,3 +41,9 @@ docker build -t hamclubbot .
 # Run a docker container, exposing $(HOME)/config.yaml as the bot configuration
 docker run -v $(HOME)/config.yaml:/app/config.yaml hamclubbot
 ```
+
+# Acknowledgements
+
+This bot is inspired by [hambot](https://github.com/alekm/hambot), but was
+written directly so I could brush up on my Python skills and learn a bit
+about Discord bots and how they operate.
