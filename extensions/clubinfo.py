@@ -27,6 +27,11 @@ class ClubInfo(simplebot.SimpleCog):
     aspects of the club. The Cog uses the Discord autocomplete feature to produce a dynamic
     list of possible queries based on the bots configuration. This allows the configuration
     to be updated to add/remove information without modifying the code itself.
+
+    The Cog also provides the 'manage_club' command group for administrators to manage the
+    content of the 'club' command. The content is stored in a sqlite3 database with the
+    location of the database specified in the Cog configuration. It's recommended that
+    access to this command group be restricted when the bot is added to a server.
     """
 
     def __init__(self, bot: simplebot.SimpleBot):
