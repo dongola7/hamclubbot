@@ -11,6 +11,7 @@ import os
 import io
 import json
 import yaml
+import time
 import extensions.util.simplebot as simplebot
 import extensions.util.persistentstore as persistentstore
 import extensions.util.views as views
@@ -83,7 +84,22 @@ class ClubInfo(simplebot.SimpleCog):
         charset = mime_args.get('charset', 'utf-8')
         content = content.decode(mime_args.get("charset", "utf-8"))
 
-        record = { 'content': content, 'charset': charset, 'type': None }
+        # Define the record layout for persistence
+        record = {
+            # raw content to be displayed
+            'content': content,
+            # character set used for encoding / decoding
+            'charset': charset,
+            # type of record (yaml / markdown)
+            'type': None,
+            # name of the 'what' argument used to retrieve this content
+            'what': what,
+            # Metadata to track who updated and when
+            'last_updated': {
+                'user_id': ctx.user.id,
+                'timestamp': time.time()
+            }
+        }
 
         # Get the file extension to determine type
         _, extension = os.path.splitext(attachment.filename)
@@ -134,19 +150,42 @@ class ClubInfo(simplebot.SimpleCog):
             )
             return
 
+        await self.send_raw_club_content(ctx, raw_record,
+                                         message = f"Here is the raw content associated with **/club {what}**")
+
+    async def send_raw_club_content(self, ctx: discord.ApplicationContext, raw_record: str, message: str | None = None):
+        """Helper function to send the raw content of a club 'what' as an attachment"""
         record = json.loads(raw_record)
         if record['type'] == 'yaml':
-            filename = f"{what}.yml"
+            filename = f"{record['what']}.yml"
         else:
-            filename = f"{what}.md"
+            filename = f"{record['what']}.md"
 
-        with io.BytesIO(bytes(record['content'], record['charset'])) as content:
-            file = discord.File(filename=filename, fp=content)
+        with io.BytesIO(bytes(record['content'], record['charset'])) as raw_content:
+            file = discord.File(filename=filename, fp=raw_content)
             await ctx.respond(
-                content="Attached is the raw content associated with /club {what}",
+                content = message,
                 file=file,
                 ephemeral=True
             )
+
+    @manage_group.command(name="delete", description="Deletes content from the club command")
+    @discord.option(name="what", description="What content do you want to delete?", autocomplete=get_what_values)
+    async def manage_club_delete(self, ctx: discord.ApplicationContext, what: str):
+        ps = self.__persistent_store(ctx.guild_id)
+        raw_record = ps.get_value(what)
+        if not raw_record:
+            await ctx.respond(
+                content=f"Nothing to delete. I don't have any information about '{what}' stored.",
+                ephemeral = True
+            )
+            return
+
+        ps.delete_value(what)
+
+        await self.send_raw_club_content(ctx, raw_record,
+                                         message=f"I deleted the content associated with **/club {what}**. Here it is in case you want to back it up.")
+
 
     @discord.command(name="club", description="Provides club information")
     @discord.option(name="what", description="What do you want to know about?", autocomplete=get_what_values)
