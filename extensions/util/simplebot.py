@@ -83,7 +83,7 @@ class SimpleCog(discord.Cog):
         super().__init__()
         
         self.__bot = bot
-        if config_name:
+        if config_name and (config_name in bot.config):
             self.__config = bot.config[config_name]
         else:
             self.__config = dict()

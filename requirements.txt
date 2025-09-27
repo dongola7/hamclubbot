@@ -1,8 +1,8 @@
-audioop-lts==0.2.2
 aiohappyeyeballs==2.6.1
 aiohttp==3.12.15
 aiosignal==1.4.0
 attrs==25.3.0
+audioop-lts==0.2.2
 cairocffi==1.7.1
 CairoSVG==2.8.2
 certifi==2025.8.3
@@ -19,6 +19,7 @@ propcache==0.3.2
 py-cord==2.6.1
 pycparser==2.23
 python-dotenv==1.1.1
+python-mimeparse==2.0.0
 PyYAML==6.0.2
 requests==2.32.5
 tinycss2==1.4.0
