@@ -31,6 +31,7 @@ except Exception as ex:
 if 'logging' in config:
     config['logging']['version'] = 1
     config['logging']['incremental'] = False
+    config['logging']['disable_existing_loggers'] = False
     logging.config.dictConfig(config['logging'])
 else:
     logging.basicConfig(
@@ -39,7 +40,6 @@ else:
 
 # Create the logger
 logger = logging.getLogger("bot")
-
 
 # Create the bot instance
 bot = simplebot.SimpleBot(config)
