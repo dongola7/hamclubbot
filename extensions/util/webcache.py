@@ -12,14 +12,19 @@ import asyncio
 logger = logging.getLogger(__name__)
 
 class CacheEntry:
-    def __init__(self, content: bytes):
-        self.__timestamp = time.time()
+    def __init__(self, content: bytes, ttl: float):
+        self.__created_at = time.time()
+        self.__expires_at = self.__created_at + ttl
         self.__content = content
         self.__extra = None
     
     @property
-    def timestamp(self) -> float:
-        return self.__timestamp
+    def created_at(self) -> float:
+        return self.__created_at
+
+    @property
+    def expires_at(self) -> float:
+        return self.__expires_at
     
     @property
     def content(self) -> bytes:
@@ -32,9 +37,16 @@ class CacheEntry:
     @extra.setter
     def extra(self, value: object | None):
         self.__extra = value
-    
-    
 
+    def last_refreshed_str(self) -> str:
+        """Returns a string indicating the amount of time since the last refresh."""
+        last_refreshed = round((time.time() - self.created_at) / 60)
+        if last_refreshed == 0:
+            return "Just refreshed"
+        elif last_refreshed == 1:
+            return "Refreshed 1 minute ago"
+        else:
+            return f"Refreshed {last_refreshed} minutes ago"
 
 class WebCache:
     """Implements a simple cache for web content"""
@@ -64,7 +76,7 @@ class WebCache:
         if url in self.__cache:
             cache_entry = self.__cache[url]
             timestamp = time.time()
-            if timestamp - cache_entry.timestamp < self.__CACHE_EXPIRY_TIME:
+            if timestamp < cache_entry.expires_at:
                 logger.debug(f"returning cached content for {url}")
                 # Cache has not expired, returned cached content
                 return cache_entry
@@ -73,6 +85,6 @@ class WebCache:
         # and add to cache            
         logger.debug(f"retrieving content for {url}")
         resp = await asyncio.get_event_loop().run_in_executor(None, requests.get, url)
-        cache_entry = self.__cache[url] = CacheEntry(resp.content)
+        cache_entry = self.__cache[url] = CacheEntry(resp.content, self.__CACHE_EXPIRY_TIME)
         
         return cache_entry

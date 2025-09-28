@@ -30,6 +30,7 @@ class Conditions(simplebot.SimpleCog):
                 description="Images from [hamqsl.com](https://www.hamqsl.com)"
             )
             embed.set_image(url="attachment://conditions.jpg")
+            embed.set_footer(text=cache_entry.last_refreshed_str())
 
             await ctx.respond(embed=embed, file=file)
 
@@ -55,6 +56,7 @@ class Conditions(simplebot.SimpleCog):
                 description="Map from [prop.kc2g.com](https://prop.kc2g.com)"
             )
             embed.set_image(url="attachment://mufmap.png")
+            embed.set_footer(text=cache_entry.last_refreshed_str())
 
             await ctx.respond(embed=embed, file=file)
 
