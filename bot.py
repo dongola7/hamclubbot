@@ -49,6 +49,7 @@ extensions = [
     "extensions.conditions",
     "extensions.clubinfo",
     "extensions.about",
+    "extensions.pota",
 ]
 
 for extension in extensions:
