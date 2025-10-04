@@ -38,9 +38,9 @@ class Pota(simplebot.SimpleCog):
         recent_url=f"https://api.pota.app/park/activations/{quoted_park}?count=5"
 
         caches = await asyncio.gather(
-            self.__cache.getUrl(stats_url),
-            self.__cache.getUrl(info_url),
-            self.__cache.getUrl(recent_url)
+            self.__cache.get_url(stats_url),
+            self.__cache.get_url(info_url),
+            self.__cache.get_url(recent_url)
         )
         stats_cache, info_cache, recent_cache = map(lambda o: cast(webcache.CacheEntry, o), caches)
         stats_result, info_result, recent_result = map(lambda c: json.loads(c.content), [stats_cache, info_cache, recent_cache])
@@ -82,7 +82,7 @@ class Pota(simplebot.SimpleCog):
         """Responds with POTA statistics for the given callsign."""
         callsign = callsign.upper()
         url = f"https://api.pota.app/stats/user/{urllib.parse.quote(callsign)}"
-        cache_entry = await self.__cache.getUrl(url)
+        cache_entry = await self.__cache.get_url(url)
         logger.debug(f"queried {url} and received {cache_entry.content}")
 
         result = json.loads(cache_entry.content)
