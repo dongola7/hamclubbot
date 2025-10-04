@@ -4,13 +4,16 @@
 # See the file LICENSE for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-import discord
-from typing import cast
-import extensions.util.webcache as webcache
+"""Extension implementing a Cog for returning radio conditions"""
+
 import io
-import cairosvg
 import logging
-import extensions.util.simplebot as simplebot
+from typing import cast
+
+import cairosvg
+import discord
+
+from extensions.util import webcache, simplebot
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +25,8 @@ class Conditions(simplebot.SimpleCog):
 
     @discord.command(name="cond", description="Show current conditions from https://hamqsl.com")
     async def cond(self, ctx: discord.ApplicationContext):
-        cache_entry = await self.__cache.getUrl('https://www.hamqsl.com/solar101pic.php')
+        """Shows current conditions from https://hamqsl.com"""
+        cache_entry = await self.__cache.get_url('https://www.hamqsl.com/solar101pic.php')
         with io.BytesIO(cache_entry.content) as content:
             file = discord.File(fp = content, filename='conditions.jpg')
             embed = self._embed(
@@ -36,8 +40,9 @@ class Conditions(simplebot.SimpleCog):
 
     @discord.command(name="muf", description="Show current MUF map from https://prop.kc2g.com")
     async def muf(self, ctx: discord.ApplicationContext):
-        URL = 'https://prop.kc2g.com/renders/current/mufd-normal-now.svg'
-        cache_entry = await self.__cache.getUrl(URL)
+        """Shows the current MUF map from https://prop.kc2g.com"""
+        url = 'https://prop.kc2g.com/renders/current/mufd-normal-now.svg'
+        cache_entry = await self.__cache.get_url(url)
 
         # If there is no extra data associated with the cache, then we need to
         # convert the SVG to a PNG and cache the PNG value
@@ -61,4 +66,5 @@ class Conditions(simplebot.SimpleCog):
             await ctx.respond(embed=embed, file=file)
 
 def setup(bot: simplebot.SimpleBot):
+    """Called when the extension is loaded"""
     bot.add_cog(Conditions(bot))
