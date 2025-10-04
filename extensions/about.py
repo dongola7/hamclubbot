@@ -4,9 +4,11 @@
 # See the file LICENSE for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-import extensions.util.simplebot as simplebot
-import discord
+"""Extension implementing a Cog providing health and status about the bot"""
+
 import datetime
+import discord
+from extensions.util import simplebot
 
 class About(simplebot.SimpleCog):
     """Implements health and status commands for the bot"""
@@ -14,7 +16,8 @@ class About(simplebot.SimpleCog):
         super().__init__(bot)
 
     @discord.command(name="about", description="Provides information about the bot")
-    async def healthAndStatus(self, ctx: discord.ApplicationContext):
+    async def health_and_status(self, ctx: discord.ApplicationContext):
+        """Provides health and status for the bot"""
         uptime = datetime.timedelta(seconds=round(self.bot.uptime))
         latency = round(self.bot.latency * 1000, 0)
 
@@ -33,4 +36,5 @@ class About(simplebot.SimpleCog):
         await ctx.respond(embed=embed)
 
 def setup(bot: simplebot.SimpleBot):
+    """Called when the extension is loaded"""
     bot.add_cog(About(bot))
