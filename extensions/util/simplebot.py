@@ -17,16 +17,20 @@ class SimpleBot(discord.Bot):
         def __init__(self, command: str):
             self.__received = 0
             self.__completed = 0
+            self.__errors = 0
             self.__command = command
 
         def __str__(self) -> str:
-            return f"cmdstats command={self.__command} received={self.__received} completed={self.__completed}"
+            return f"cmdstats command={self.__command} received={self.__received} completed={self.__completed} errors={self.__errors}"
 
         def incr_completed(self):
             self.__completed += 1
 
         def incr_received(self):
             self.__received += 1
+
+        def incr_errors(self):
+            self.__errors += 1
 
     """Implements a base class providing some commmon functionality for bots"""
     def __init__(self, config: dict | None = None, **kwargs):
@@ -50,6 +54,10 @@ class SimpleBot(discord.Bot):
 
     async def on_application_command_completion(self, ctx: discord.ApplicationContext):
         self.__get_command_stats(str(ctx.command)).incr_completed()
+
+    async def on_application_command_error(self, context: discord.ApplicationContext, exception: discord.DiscordException):
+        self.__get_command_stats(str(context.command)).incr_errors()
+        logger.error("error while processing command '%s': %s", context.command, exception, exc_info=True)
 
     @discord.ext.tasks.loop(minutes=5)
     async def log_command_stats(self):
