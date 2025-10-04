@@ -4,20 +4,21 @@
 # See the file LICENSE for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
-import discord
+"""Extension implementing functions to provide static club information"""
+
 import logging
-import mimeparse
 import os
 import io
 import json
-import yaml
 import time
-import extensions.util.simplebot as simplebot
-import extensions.util.persistentstore as persistentstore
-import extensions.util.views as views
+
+import yaml
+import mimeparse
+import discord
+
+from extensions.util import persistentstore, simplebot, views
 
 logger = logging.getLogger(__name__)
-
 
 class ClubInfo(simplebot.SimpleCog):
     """
@@ -39,7 +40,7 @@ class ClubInfo(simplebot.SimpleCog):
 
         self.__dbpath = self.config.get('database_path', None)
         if not self.__dbpath:
-            raise SystemExit(f'missing configuration: clubInfo -> database_path')
+            raise SystemExit('missing configuration: clubInfo -> database_path')
 
     def __persistent_store(self, guild_id: int) -> persistentstore.PersistentGuildStore:
         """Returns the object used for persistent storage"""
@@ -51,13 +52,22 @@ class ClubInfo(simplebot.SimpleCog):
         ps = self.__persistent_store(guild_id)
         return ps.get_keys(ctx.value.lower())
 
-    manage_group = discord.SlashCommandGroup(name="manage_club", description="Commands used to manage content for /club")
+    manage_group = discord.SlashCommandGroup(name="manage_club",
+        description="Commands used to manage content for /club")
 
-    @manage_group.command(name="update", description="Updates (or adds) content to the /club command")
-    @discord.option(name="what", description="What do you want to update or add?", autocomplete=get_what_values)
+    @manage_group.command(name="update",
+        description="Updates (or adds) content to the /club command")
+    @discord.option(name="what", description="What do you want to update or add?",
+        autocomplete=get_what_values)
     @discord.option(name="file", description="File containing the new content")
-    async def manage_club_update(self, ctx: discord.ApplicationContext, what: str, attachment: discord.Attachment):
-        logger.info(f"received attachment guild_id={ctx.guild_id}, guild={ctx.guild}, filename={attachment.filename}, title={attachment.title}, content_type={attachment.content_type}")
+    async def manage_club_update(self,
+        ctx: discord.ApplicationContext,
+        what: str,
+        attachment: discord.Attachment):
+        """Updates stored club information"""
+        logger.info("received attachment guild_id=%d, guild=%s, filename=%s, title=%s, \
+content_type=%s",
+            ctx.guild_id, ctx.guild, attachment.filename, attachment.title, attachment.content_type)
 
         # We want to be case insensitive
         what = what.lower()
@@ -66,20 +76,23 @@ class ClubInfo(simplebot.SimpleCog):
         mime_type, _, mime_args = mimeparse.parse_mime_type(attachment.content_type)
         if mime_type != "text":
             await ctx.respond(
-                content=f"Looks like you sent an invalid file of type {mime_type}. Please send a text file.",
+                content=f"Looks like you sent an invalid file of type {mime_type}. \
+Please send a text file.",
                 ephemeral=True)
             return
         # Files larger than 5k are rejected
-        elif attachment.size > 5120:
+        if attachment.size > 5120:
             await ctx.respond(
-                content=f"Files must be less than 5120 bytes. You sent a file of {attachment.size} bytes. Please send a smaller file.",
+                content=f"Files must be less than 5120 bytes. You sent a file of {attachment.size} \
+bytes. Please send a smaller file.",
                 ephemeral=True
             )
             return
         # Don't allow more than 10 messages to be defined
-        elif len(self.__persistent_store(ctx.guild_id).get_keys('')) >= 10:
+        if len(self.__persistent_store(ctx.guild_id).get_keys('')) >= 10:
             await ctx.respond(
-                content=f"You have already defined your maximum of 10 club messages. Please delete or replace an existing message.",
+                content="You have already defined your maximum of 10 club messages. Please delete \
+or replace an existing message.",
                 ephemeral=True
             )
             return
@@ -108,7 +121,7 @@ class ClubInfo(simplebot.SimpleCog):
 
         # Get the file extension to determine type
         _, extension = os.path.splitext(attachment.filename)
-        if extension == ".yaml" or extension == ".yml":
+        if extension in ('.yaml', '.yml'):
             # Parse as a YAML file
             record['type'] = 'yaml'
         else:
@@ -119,8 +132,9 @@ class ClubInfo(simplebot.SimpleCog):
         yes_no_view = views.YesNoConfirmationView(timeout=120)
         embed = self._generate_embed(record)
         await ctx.respond(
-            content=f"Here is a preview of your update. Do you want to save this change to '{what}'?", 
-            embed=embed, 
+            content=f"Here is a preview of your update. Do you want to save this change \
+to '{what}'?",
+            embed=embed,
             view=yes_no_view,
             ephemeral=True)
 
@@ -143,22 +157,29 @@ class ClubInfo(simplebot.SimpleCog):
         # Send the response
         await ctx.interaction.edit(content=message, view=None, embed=None)
 
-    @manage_group.command(name="get", description="Gets the raw content associated with a /club subcommand")
-    @discord.option(name="what", description="What raw content do you want to retrieve?", autocomplete=get_what_values)
+    @manage_group.command(name="get",
+        description="Gets the raw content associated with a /club subcommand")
+    @discord.option(name="what", description="What raw content do you want to retrieve?",
+        autocomplete=get_what_values)
     async def manage_club_get(self, ctx: discord.ApplicationContext, what: str):
+        """Gets raw club information (for subsequent update)"""
         ps = self.__persistent_store(ctx.guild_id)
         raw_record = ps.get_value(what)
         if not raw_record:
             await ctx.respond(
-                content=f"I don't have any information about '{what}'. Add some using **/manage_club update**",
+                content=f"I don't have any information about '{what}'. Add some using \
+**/manage_club update**",
                 ephemeral=True
             )
             return
 
-        await self.send_raw_club_content(ctx, raw_record,
-                                         message = f"Here is the raw content associated with **/club {what}**")
+        await self.__send_raw_club_content(ctx, raw_record,
+            message = f"Here is the raw content associated with **/club {what}**")
 
-    async def send_raw_club_content(self, ctx: discord.ApplicationContext, raw_record: str, message: str | None = None):
+    async def __send_raw_club_content(self,
+        ctx: discord.ApplicationContext,
+        raw_record: str,
+        message: str | None = None):
         """Helper function to send the raw content of a club 'what' as an attachment"""
         record = json.loads(raw_record)
         if record['type'] == 'yaml':
@@ -175,34 +196,40 @@ class ClubInfo(simplebot.SimpleCog):
             )
 
     @manage_group.command(name="delete", description="Deletes content from the club command")
-    @discord.option(name="what", description="What content do you want to delete?", autocomplete=get_what_values)
+    @discord.option(name="what", description="What content do you want to delete?",
+        autocomplete=get_what_values)
     async def manage_club_delete(self, ctx: discord.ApplicationContext, what: str):
+        """Deletes stored club information"""
         ps = self.__persistent_store(ctx.guild_id)
         raw_record = ps.get_value(what)
         if not raw_record:
             await ctx.respond(
-                content=f"Nothing to delete. I don't have any information about '{what}' stored.",
+                content=f"Nothing to delete. I don't have any information about \
+'{what}' stored.",
                 ephemeral = True
             )
             return
 
         ps.delete_value(what)
 
-        await self.send_raw_club_content(ctx, raw_record,
-                                         message=f"I deleted the content associated with **/club {what}**. Here it is in case you want to back it up.")
-
+        await self.__send_raw_club_content(ctx, raw_record,
+            message=f"I deleted the content associated with **/club {what}**. Here it is \
+in case you want to back it up.")
 
     @discord.command(name="club", description="Provides club information")
-    @discord.option(name="what", description="What do you want to know about?", autocomplete=get_what_values)
+    @discord.option(name="what", description="What do you want to know about?",
+        autocomplete=get_what_values)
     async def club(self,  ctx: discord.ApplicationContext, what: str):
+        """Queries club information and returns the formatted results"""
         # We want to be case insensitive
         what = what.lower()
 
         ps = self.__persistent_store(ctx.guild_id)
         raw_record = ps.get_value(what)
         if not raw_record:
-            await ctx.respond(content=f"I don't have any information about '{what}'. Ask the admin to add some!",
-                              ephemeral=True)
+            await ctx.respond(
+                content=f"I don't have any information about '{what}'. Ask the admin to add some!",
+                ephemeral=True)
             return
 
         record = json.loads(raw_record)
@@ -222,9 +249,12 @@ class ClubInfo(simplebot.SimpleCog):
             )
 
             for field in config.get('fields', None):
-                embed.add_field(name=field.get('name', None), value=field.get('value', None), inline=field.get('inline', True))
-        
+                embed.add_field(name=field.get('name', None),
+                    value=field.get('value', None),
+                    inline=field.get('inline', True))
+
         return embed
 
 def setup(bot: simplebot.SimpleBot):
+    """Called when the extension is loaded"""
     bot.add_cog(ClubInfo(bot))
