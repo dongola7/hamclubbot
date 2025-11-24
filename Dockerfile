@@ -7,10 +7,13 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . .
+COPY src .
+COPY pyproject.toml .
+COPY LICENSE .
+
 RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+    && pip install .
 
 ENV BOT_CONFIG=/app/config.yaml
 
-CMD exec python3 bot.py --config ${BOT_CONFIG}
+CMD exec hamclubbot --config ${BOT_CONFIG}
