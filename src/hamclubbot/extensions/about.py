@@ -8,7 +8,7 @@
 
 import datetime
 import discord
-from extensions.util import simplebot
+from hamclubbot.extensions.util import simplebot
 
 class About(simplebot.SimpleCog):
     """Implements health and status commands for the bot"""

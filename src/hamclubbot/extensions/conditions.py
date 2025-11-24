@@ -13,7 +13,7 @@ from typing import cast
 import cairosvg
 import discord
 
-from extensions.util import webcache, simplebot
+from hamclubbot.extensions.util import webcache, simplebot
 
 logger = logging.getLogger(__name__)
 

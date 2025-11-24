@@ -1,0 +1,37 @@
+[project]
+name = "hamclubbot"
+description = "Bot to help with amateur radio club discords"
+readme = "README.md"
+
+authors = [
+    { name = "Blair Kitchen", email = "blair@blairkitchen.com" }
+]
+
+license = "MIT"
+license-files = ["LICENSE"]
+
+dynamic = ["version"]
+
+requires-python = ">= 3.13"
+dependencies = [
+    "py-cord >= 2.6.1",
+    "requests >= 2.32.5",
+    "CairoSVG >= 2.8.2",
+    "python-mimeparse >= 2.0.0",
+    "PyYAML >= 6.0.2",
+    "audioop-lts",
+]
+
+[project.urls]
+Homepage = "https://github.com/dongola7/hamclubbot"
+Repository = "https://github.com/dongola7/hamclubbot.git"
+Issues = "https://github.com/dongola7/hamclubbot/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest >= 9.0",
+    "pylint >= 4.0",
+]
+
+[project.scripts]
+hamclubbot = "hamclubbot.__main__:main"

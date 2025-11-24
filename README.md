@@ -97,7 +97,7 @@ python3 -m venv local-env
 source local-env/bin/activate
 
 # Install required packages
-pip install -r requirements.txt
+pip install -e ".[dev]"
 
 # Generate the config file from 1Password
 op inject -i ./config/config.yaml.tmpl -o ./config/config.yaml

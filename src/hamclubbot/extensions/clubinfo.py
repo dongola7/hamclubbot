@@ -16,7 +16,7 @@ import yaml
 import mimeparse
 import discord
 
-from extensions.util import persistentstore, simplebot, views
+from hamclubbot.extensions.util import persistentstore, simplebot, views
 
 logger = logging.getLogger(__name__)
 

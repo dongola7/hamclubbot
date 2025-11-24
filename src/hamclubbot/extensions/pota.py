@@ -15,7 +15,7 @@ import urllib.parse
 
 import discord
 
-from extensions.util import simplebot, webcache
+from hamclubbot.extensions.util import simplebot, webcache
 
 logger = logging.getLogger(__name__)
 
