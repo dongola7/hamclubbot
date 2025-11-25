@@ -93,17 +93,17 @@ fields:
 brew bundle
 
 # Create and activate a python virtual environment
-python3 -m venv local-env
-source local-env/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 
-# Install required packages
+# Install required packages in edit mode
 pip install -e ".[dev]"
 
 # Generate the config file from 1Password
 op inject -i ./config/config.yaml.tmpl -o ./config/config.yaml
 
 # Run the bot
-./bot.py --config ./config/config.yaml
+hamclubbot --config ./config/config.yaml
 ```
 
 ## Running using a Docker Image
