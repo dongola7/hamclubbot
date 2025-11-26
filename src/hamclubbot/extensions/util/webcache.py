@@ -76,11 +76,9 @@ class WebCache:
         Returns the cache entry for the given URL.
 
         Returns:
-            dict: Dictionary of the cache entry. All cache entries have a 'timestamp' and a
-                'content' key. The 'timestamp' is the time the cache entry was created. The
-                'content' is the binary content returned from the URL. Optionally, some cache
-                entries may also have an 'extra' key which stores user defined data. You can set
-                the 'extra' content using the cacheRelatedData method.
+            CacheEntry: The cache entry containing retrieved content. You can check the
+                'created_at' attribute of the entry to see if it's brand new or has been
+                returned from cache.
         """
         # Check if URL is cached and the cache has not yet expired.
         if url in self.__cache:
