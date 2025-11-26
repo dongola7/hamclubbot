@@ -7,6 +7,7 @@
 """Implements a basic cache for web requests"""
 
 import logging
+import math
 import time
 import asyncio
 
@@ -49,7 +50,7 @@ class CacheEntry:
 
     def last_refreshed_str(self) -> str:
         """Returns a string indicating the amount of time since the last refresh."""
-        last_refreshed = round((time.time() - self.created_at) / 60)
+        last_refreshed = math.floor((time.time() - self.created_at) / 60)
         if last_refreshed == 0:
             return "Just refreshed"
         if last_refreshed == 1:
