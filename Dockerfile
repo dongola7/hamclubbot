@@ -21,7 +21,6 @@ WORKDIR /app
 # Copy packages from the build stage
 COPY --from=build /root/.local /home/${USER}/.local
 
-# Install system dependencies (temporary until 2.7.0 of pycord)
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libcairo2 \
     && apt-get clean \
