@@ -31,8 +31,8 @@ docker build -t hamclubbot .
 # Run via Docker (requires config at ~/config.yaml)
 docker run -e DISCORD_TOKEN=<token> -v $(HOME)/config.yaml:/app/config.yaml hamclubbot
 
-# Generate config from 1Password template
-op inject -i ./config/config.yaml.tmpl -o ./config/config.yaml
+# Generate config from template
+cp ./config/config.yaml.tmpl ./config/config.yaml
 ```
 
 ## Architecture
@@ -68,7 +68,7 @@ All bot functionality lives in `src/hamclubbot/extensions/`. Each extension is a
 
 The Discord token is read from the `DISCORD_TOKEN` environment variable, not the config file.
 
-`config.yaml` (generated from `config/config.yaml.tmpl` via 1Password):
+`config.yaml` (copied from `config/config.yaml.tmpl` and filled in):
 ```yaml
 ownerId: <discord-user-id>
 clubInfo:

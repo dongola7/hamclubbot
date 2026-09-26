@@ -176,11 +176,9 @@ Required/known keys:
 | `embeds.color` | no | Default embed accent color; falls back to a sane default. |
 | `logging.*` | no | Passed through to the logging subsystem's structured config mechanism; if absent, use a sensible default (INFO level, timestamped single-line format to stdout). |
 
-The config format should support external secret injection (e.g. templated
-and filled by a secrets manager/1Password/Vault at deploy time) rather than
-committing real secrets to source control. Ship a `.tmpl` example config
-with placeholder values plus documented generation instructions, and ensure
-real config files are excluded from version control.
+Ship a `.tmpl` example config with placeholder values plus documented
+generation instructions, and ensure real config files are excluded from
+version control.
 
 ### 4.2 HTTP response caching
 All outbound calls to third-party HTTP data sources must go through a
@@ -299,11 +297,11 @@ rewrite must not repeat this.** Requirements:
   outbound URLs as raw path segments.
 
 ### 6.3 Secrets handling
-- Bot token and other secrets are supplied via the config file only —
-  never hardcoded, never logged, never echoed back in any command
-  response or error message.
-- Config files containing real secrets must be excluded from version
-  control; provide a template with placeholder/injectable values instead.
+- The bot token is supplied via the `DISCORD_TOKEN` environment variable,
+  never the config file — never hardcoded, never logged, never echoed
+  back in any command response or error message.
+- Config files must be excluded from version control; provide a
+  template with placeholder values instead.
 
 ### 6.4 Least-privilege deployment
 - Container images must run as a dedicated non-root user, not root.

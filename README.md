@@ -99,8 +99,8 @@ source .venv/bin/activate
 # Install required packages in edit mode
 pip install -e ".[dev]"
 
-# Generate the config file from 1Password
-op inject -i ./config/config.yaml.tmpl -o ./config/config.yaml
+# Copy the config template and fill in your own values
+cp ./config/config.yaml.tmpl ./config/config.yaml
 
 # Run the bot
 DISCORD_TOKEN=<token> hamclubbot --config ./config/config.yaml
