@@ -103,7 +103,7 @@ pip install -e ".[dev]"
 op inject -i ./config/config.yaml.tmpl -o ./config/config.yaml
 
 # Run the bot
-hamclubbot --config ./config/config.yaml
+DISCORD_TOKEN=<token> hamclubbot --config ./config/config.yaml
 ```
 
 ## Running using a Docker Image
@@ -120,7 +120,7 @@ For example:
 docker build -t hamclubbot .
 
 # Run a docker container, exposing $(HOME)/config.yaml as the bot configuration
-docker run -v $(HOME)/config.yaml:/app/config.yaml hamclubbot
+docker run -e DISCORD_TOKEN=<token> -v $(HOME)/config.yaml:/app/config.yaml hamclubbot
 ```
 
 # Acknowledgements
