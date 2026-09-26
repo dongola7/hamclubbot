@@ -11,6 +11,7 @@
 import logging
 import logging.config
 import argparse
+import os
 import yaml
 import discord
 from hamclubbot.extensions.util import simplebot
@@ -21,6 +22,12 @@ def main():
     parser = argparse.ArgumentParser(description="Discord bot for use in ham radio club discords")
     parser.add_argument("-c", "--config", required=True, help="Config file location")
     args = parser.parse_args()
+
+    # Read the discord token from the environment so it never has to be
+    # rendered to disk
+    discord_token = os.environ.get("DISCORD_TOKEN")
+    if not discord_token:
+        raise SystemExit("DISCORD_TOKEN environment variable is required")
 
     # Load config file
     try:
@@ -67,7 +74,7 @@ def main():
     # Start the bot
     try:
         logger.info("Starting bot...")
-        bot.run(config['discordToken'])
+        bot.run(discord_token)
     except discord.LoginFailure as ex:
         logger.critical("Failed to authenticate to discord: %s", ex)
         raise SystemExit("Error: Failed to authenticate with discord") from ex
