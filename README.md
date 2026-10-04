@@ -123,6 +123,11 @@ docker build -t hamclubbot .
 docker run -e DISCORD_TOKEN=<token> -v $(HOME)/config.yaml:/app/config.yaml hamclubbot
 ```
 
+`/app/storage` is owned by the bot's user and is meant for persistent data such as the
+`clubinfo` database (set `clubInfo.database_path` to `/app/storage/clubinfo.db`). Mount a
+named volume there, e.g. `-v hamclubbot-storage:/app/storage`, and Docker will give it the
+right ownership automatically.
+
 # Acknowledgements
 
 This bot is inspired by [hambot](https://github.com/alekm/hambot), but was

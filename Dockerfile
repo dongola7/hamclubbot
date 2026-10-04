@@ -26,9 +26,11 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Create the user and set directory permissions
+# Create the user and set directory permissions. /app/storage is created here so a
+# named volume mounted over it inherits the user's ownership instead of root's.
 RUN useradd ${USER}
-RUN chown -R ${USER}:${USER} /home/${USER} \
+RUN mkdir -p /app/storage \
+    && chown -R ${USER}:${USER} /home/${USER} \
     && chown -R ${USER}:${USER} /app
 
 # Run as the new user, not root
