@@ -21,8 +21,11 @@ WORKDIR /app
 # Copy packages from the build stage
 COPY --from=build /root/.local /home/${USER}/.local
 
+# Upgrade installed packages so security fixes (e.g. ca-certificates) are picked up even if
+# the base image lags behind Debian's updates.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libcairo2 \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends libcairo2 ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
